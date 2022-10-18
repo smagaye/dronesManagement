@@ -70,4 +70,4 @@ In this case study, we assume that
 
 We offer the class diagram below
 
-![Diagram Class](docs/conception.drawio.svg)
+![Diagram Class](docs/class-diagram.drawio.svg)
