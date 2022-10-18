@@ -1,0 +1,5 @@
+package com.musala.dronesManagement.enums;
+
+public enum State {
+	IDLE, LOADING, LOADED, DELIVERING, DELIVERED, RETURNING
+}
