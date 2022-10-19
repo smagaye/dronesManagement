@@ -12,6 +12,8 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
+import java.math.BigDecimal;
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -58,17 +60,17 @@ class DroneControllerImplTests {
     static void setUpBeforeClass() throws Exception {
         drone1 = new DroneDTO();
         drone1.setId(1);
-        drone1.setBattery(50);
+        drone1.setBattery(50.0);
         drone1.setModel(Model.Lightweight);
         drone1.setSerialNumber("RFG782u9053");
-        drone1.setWeight(200);
+        drone1.setWeight(new BigDecimal(200));
 
         drone2 = new DroneDTO();
         drone2.setId(10);
-        drone2.setBattery(90);
+        drone2.setBattery(90.0);
         drone2.setModel(Model.Cruiserweight);
         drone2.setSerialNumber("AQFG782u9053");
-        drone2.setWeight(150);
+        drone2.setWeight(new BigDecimal(150));
         drone2.setState(State.IDLE);
 
     }
@@ -84,10 +86,10 @@ class DroneControllerImplTests {
     void testDroneRegister() throws Exception {
         DroneDTO droneDTO = new DroneDTO();
         droneDTO.setId(0);
-        droneDTO.setBattery(90);
+        droneDTO.setBattery(90.0);
         droneDTO.setModel(Model.Cruiserweight);
         droneDTO.setSerialNumber("AQFG782u9053");
-        droneDTO.setWeight(150);
+        droneDTO.setWeight(new BigDecimal(150));
         droneDTO.setState(State.IDLE);
 
         lenient().when(droneService.create(droneDTO)).thenReturn(Optional.of(droneDTO));
@@ -113,7 +115,7 @@ class DroneControllerImplTests {
                 .andExpect(jsonPath("$[0].serialNumber", is(drone1.getSerialNumber())))
                 .andExpect(jsonPath("$[0].model", is(drone1.getModel().toString())))
                 .andExpect(jsonPath("$[0].battery", is(drone1.getBattery())))
-                .andExpect(jsonPath("$[0].weight", is(drone1.getWeight())))
+                .andExpect(jsonPath("$[0].weight", is(drone1.getWeight().intValue())))
                 .andExpect(jsonPath("$[0].state", is(drone1.getState())));
 
         verify(droneService, times(1)).findByState(State.LOADING);
@@ -137,12 +139,12 @@ class DroneControllerImplTests {
     void testGetBatteryLevelforDroneById() throws Exception {
 
         when(droneService.checkDroneBatteryById(drone1.getId()))
-                .thenReturn(Optional.of(new BatteryLevel(drone1.getBattery())));
+                .thenReturn(Optional.of(new BatteryLevel(drone1.getBattery().longValue())));
         mockMvc.perform(get("/drones/{id}/battery", drone1.getId()))
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.level").value(drone1.getBattery() + "%"));
+                .andExpect(jsonPath("$.level").value(drone1.getBattery().longValue() + "%"));
 
         verify(droneService, times(1)).checkDroneBatteryById(drone1.getId());
         verifyNoMoreInteractions(droneService);

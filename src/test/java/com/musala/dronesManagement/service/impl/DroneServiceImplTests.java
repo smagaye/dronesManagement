@@ -3,7 +3,6 @@ package com.musala.dronesManagement.service.impl;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
@@ -11,6 +10,7 @@ import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
+import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -61,10 +61,10 @@ class DroneServiceImplTests {
 
         drone2 = new DroneDTO();
         drone2.setId(10);
-        drone2.setBattery(90);
+        drone2.setBattery(90.0);
         drone2.setModel(Model.Cruiserweight);
         drone2.setSerialNumber("AQFG782u9053");
-        drone2.setWeight(150);
+        drone2.setWeight(new BigDecimal(150));
         drone2.setState(State.IDLE);
 
     }
@@ -78,10 +78,10 @@ class DroneServiceImplTests {
 
         DroneDTO droneToSave = new DroneDTO();
         droneToSave.setId(0);
-        droneToSave.setBattery(50);
+        droneToSave.setBattery(50.0);
         droneToSave.setModel(Model.Lightweight);
         droneToSave.setSerialNumber("PJG782u9053");
-        droneToSave.setWeight(200);
+        droneToSave.setWeight(new BigDecimal(500));
         droneToSave.setState(State.LOADING);
 
         lenient().when(modelMapper.map(droneToSave, Drone.class)).thenReturn(drone1);
