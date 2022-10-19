@@ -2,6 +2,8 @@ package com.musala.dronesManagement.controllers;
 
 import java.util.List;
 
+import javax.validation.Valid;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -29,7 +31,7 @@ public interface IDroneController {
 
     @Operation(summary = "Register a drone")
     @PostMapping("/register")
-    public ResponseEntity<?> register(@RequestBody DroneDTO drone);
+    public ResponseEntity<?> register(@Valid @RequestBody DroneDTO drone);
 
     @Operation(summary = "Checking drones by state") // checking available drones for loading;
     @GetMapping
