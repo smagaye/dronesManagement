@@ -34,7 +34,7 @@ The service should allow:
 - Checking available drones for loading;
 - Check drone battery level for a given drone;
  
-> Feel free to make assumptions for the design approach. 
+<!-- > Feel free to make assumptions for the design approach.  -->
  
 ---
  
