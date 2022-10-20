@@ -34,7 +34,7 @@ The service should allow:
 - Checking available drones for loading;
 - Check drone battery level for a given drone;
  
-> Feel free to make assumptions for the design approach. 
+<!-- > Feel free to make assumptions for the design approach.  -->
  
 ---
  
@@ -71,3 +71,52 @@ In this case study, we assume that
 We offer the class diagram below
 
 ![Diagram Class](docs/class-diagram.drawio.svg)
+
+
+### Development Environnement
+### Requirements
+- Install Git in your machine
+- Clone project with following command
+```bash
+git clone
+cd dronesManagement
+```
+
+### Dependencies installation
+You must run this command for downloading all dependencies project
+```bash
+./mvnw install
+```
+### Unit Tests and Coverage
+```bash
+./mvnw  test
+```
+After runing test you can see coverage results in folder ./target/site/jacoco/index.html
+
+![Diagram Class](docs/coverage.png)
+
+### Bootstrap Applciation
+if you want start application you should run following command
+```bash
+./mvnw spring-boot:run
+```
+Application will be started at Port 8080
+
+#### Documentation
+API Documentation is avalaible. You can test endpoints! http://localhost:8080/documentation
+
+![Diagram Class](docs/openapi-doc.png)
+
+#### InMemoryDatabase
+API Documentation is avalaible. You can test it! http://localhost:8080/h2-console/
+
+![Diagram Class](docs/h2-homepage.png)
+##### credentials
+- Username : sa
+- Password : password
+
+![Diagram Class](docs/h2-database.png)
+
+#### History Commit Snapshots
+
+![Diagram Class](docs/commit-history.png)
