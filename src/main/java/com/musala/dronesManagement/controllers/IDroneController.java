@@ -13,8 +13,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import com.musala.dronesManagement.dto.CreateChargingItemDTO;
 import com.musala.dronesManagement.dto.DroneDTO;
-import com.musala.dronesManagement.dto.MedicationDTO;
 import com.musala.dronesManagement.enums.State;
 
 import io.swagger.v3.oas.annotations.Operation;
@@ -43,10 +43,10 @@ public interface IDroneController {
             @PathVariable("id") long id);
 
     @Operation(summary = "Loading a drone with medication items")
-    @PutMapping("/{id}/medications/updload")
+    @PutMapping("/medications/updload/{id}")
     public ResponseEntity<?> updloadMedicationForDrone(
             @Parameter(description = "id of drone to be searched") @PathVariable("id") long id,
-            @RequestBody List<MedicationDTO> medications);
+            @RequestBody List<CreateChargingItemDTO> medications);
 
     @Operation(summary = "Checking loaded medication items for a given drone")
     @ApiResponses(value = {

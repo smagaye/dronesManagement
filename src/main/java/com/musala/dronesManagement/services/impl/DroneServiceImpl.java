@@ -34,7 +34,7 @@ public class DroneServiceImpl implements IDroneService {
 
 	@Override
 	public Optional<DroneDTO> findDroneById(long id) {
-		return Optional.of(mapper.map(droneRepository.findById(id), DroneDTO.class));
+		return Optional.of(mapper.map(droneRepository.findById(id).get(), DroneDTO.class));
 	}
 
 	@Override

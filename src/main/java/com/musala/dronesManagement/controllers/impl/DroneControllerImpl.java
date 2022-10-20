@@ -9,9 +9,10 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
 import com.musala.dronesManagement.controllers.IDroneController;
+import com.musala.dronesManagement.dto.CreateChargingItemDTO;
 import com.musala.dronesManagement.dto.DroneDTO;
-import com.musala.dronesManagement.dto.MedicationDTO;
 import com.musala.dronesManagement.enums.State;
+import com.musala.dronesManagement.services.IDroneChargingService;
 import com.musala.dronesManagement.services.IDroneService;
 
 @RestController
@@ -19,6 +20,9 @@ public class DroneControllerImpl implements IDroneController {
 
     @Autowired
     private IDroneService droneService;
+
+    @Autowired
+    private IDroneChargingService droneChargingService;
 
     @Override
     public ResponseEntity<?> register(DroneDTO droneDTO) {
@@ -36,11 +40,9 @@ public class DroneControllerImpl implements IDroneController {
     }
 
     @Override
-    public ResponseEntity<?> updloadMedicationForDrone(long id, List<MedicationDTO> medications) {
-        if (id > 0) {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
-        return new ResponseEntity<>(HttpStatus.OK);
+    public ResponseEntity<?> updloadMedicationForDrone(long id, List<CreateChargingItemDTO> droneChargingItems) {
+        return new ResponseEntity<>(droneChargingService.uploadForDroneMedication(id, droneChargingItems),
+                HttpStatus.OK);
     }
 
     @Override
