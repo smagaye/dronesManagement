@@ -2,6 +2,9 @@ package com.musala.dronesManagement.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.verifyNoMoreInteractions;
 import static org.mockito.Mockito.when;
 
 import java.math.BigDecimal;
@@ -106,6 +109,9 @@ class DroneChargingServiceImplTests {
         
         assertTrue(droneChargingDTOsaved.isPresent());
         assertNotNull(droneChargingDTOsaved.get());
+        
+        verify(droneChargingRepo, times(1)).save(droneCharging);
+        verifyNoMoreInteractions(droneChargingRepo);
 
     }
 
