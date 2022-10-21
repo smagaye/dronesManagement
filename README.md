@@ -77,9 +77,15 @@ We offer the class diagram below
 ### Requirements
 - JDK 11
 - Install Git Bash for if you are using windows
+
+#### Installation
+- Open your terminal
 - Clone project with following command
 ```bash
-git clone
+git clone https://github.com/smagaye/dronesManagement.git
+```
+- Go to the project directory
+```bash
 cd dronesManagement
 ```
 
