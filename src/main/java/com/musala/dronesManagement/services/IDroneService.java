@@ -15,5 +15,7 @@ public interface IDroneService {
 	public List<DroneDTO> findByState(State state);
 
 	public Optional<Object> checkDroneBatteryById(long id);
+	
+	public List<DroneDTO> getDroneBatteryLessThan(double percent);
 
 }

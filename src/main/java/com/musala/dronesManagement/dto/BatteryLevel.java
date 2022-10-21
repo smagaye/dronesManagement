@@ -7,9 +7,9 @@ public class BatteryLevel {
 		this.level = level;
 	}
 
-	public BatteryLevel(long level) {
+	public BatteryLevel(double level) {
 		super();
-		this.level = Long.toString(level).concat("%");
+		this.level = Double.toString(level).concat("%");
 	}
 
 	private String level;

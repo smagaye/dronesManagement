@@ -14,75 +14,72 @@ import com.musala.dronesManagement.enums.State;
 @Entity
 public class Drone {
 
-	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private long id;
 
-	@Column(unique = true, length = 100)
-	private String serialNumber;
+    @Column(unique = true, length = 100)
+    private String serialNumber;
 
-	@Enumerated(EnumType.STRING)
-	private Model model;
-	
-	
-	@Column
-	private double weight;
-	
-	@Column
-	private int battery;
-	
-	@Column
-	@Enumerated(EnumType.STRING)
-	private State state;
+    @Enumerated(EnumType.STRING)
+    private Model model;
 
-	public long getId() {
-		return id;
-	}
+    @Column
+    private double weight;
 
-	public void setId(long id) {
-		this.id = id;
-	}
+    @Column
+    private double battery;
 
-	public String getSerialNumber() {
-		return serialNumber;
-	}
+    @Column
+    @Enumerated(EnumType.STRING)
+    private State state;
 
-	public void setSerialNumber(String serialNumber) {
-		this.serialNumber = serialNumber;
-	}
+    public long getId() {
+        return id;
+    }
 
-	public Model getModel() {
-		return model;
-	}
+    public void setId(long id) {
+        this.id = id;
+    }
 
-	public void setModel(Model model) {
-		this.model = model;
-	}
+    public String getSerialNumber() {
+        return serialNumber;
+    }
 
-	public double getWeight() {
-		return weight;
-	}
+    public void setSerialNumber(String serialNumber) {
+        this.serialNumber = serialNumber;
+    }
 
-	public void setWeight(double weight) {
-		this.weight = weight;
-	}
+    public Model getModel() {
+        return model;
+    }
 
-	public int getBattery() {
-		return battery;
-	}
+    public void setModel(Model model) {
+        this.model = model;
+    }
 
-	public void setBattery(int battery) {
-		this.battery = battery;
-	}
+    public double getWeight() {
+        return weight;
+    }
 
-	public State getState() {
-		return state;
-	}
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
 
-	public void setState(State state) {
-		this.state = state;
-	}
-	
-	
+    public double getBattery() {
+        return battery;
+    }
+
+    public void setBattery(double battery) {
+        this.battery = battery;
+    }
+
+    public State getState() {
+        return state;
+    }
+
+    public void setState(State state) {
+        this.state = state;
+    }
 
 }
