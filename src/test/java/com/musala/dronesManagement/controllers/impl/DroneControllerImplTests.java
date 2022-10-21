@@ -1,7 +1,7 @@
 package com.musala.dronesManagement.controllers.impl;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.Mockito.lenient;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -13,14 +13,12 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -82,26 +80,68 @@ class DroneControllerImplTests {
     }
 
     @Test
-    @Disabled("Disabled until RegistryDrone is up!")
     void testDroneRegister() throws Exception {
         DroneDTO droneDTO = new DroneDTO();
         droneDTO.setId(0);
         droneDTO.setBattery(90.0);
         droneDTO.setModel(Model.Cruiserweight);
-        droneDTO.setSerialNumber("AQFG782u9053");
+        droneDTO.setSerialNumber("AQFG782U9053");
         droneDTO.setWeight(new BigDecimal(150));
-        droneDTO.setState(State.IDLE);
+        droneDTO.setState(State.LOADING);
 
-        lenient().when(droneService.create(droneDTO)).thenReturn(Optional.of(droneDTO));
+        when(droneService.create(any(DroneDTO.class))).thenReturn(Optional.of(droneDTO));
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/drones/register")
-                .content(Formatter.asJsonString(drone2))
+                .content(Formatter.asJsonString(droneDTO))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.serialNumber").value(droneDTO.getSerialNumber()));
-        verify(droneService, times(1)).create(droneDTO);
+        verify(droneService, times(1)).create(any(DroneDTO.class));
+        verifyNoMoreInteractions(droneService);
+    }
+    
+    @Test
+    void testDroneRegisterWithInvalidId() throws Exception {
+        DroneDTO droneDTO = new DroneDTO();
+        droneDTO.setId(10);
+        droneDTO.setBattery(90.0);
+        droneDTO.setModel(Model.Cruiserweight);
+        droneDTO.setSerialNumber("AQFG782U9053");
+        droneDTO.setWeight(new BigDecimal(150));
+        droneDTO.setState(State.LOADING);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/drones/register")
+                .content(Formatter.asJsonString(droneDTO))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isBadRequest());
+        verify(droneService, times(0)).create(any(DroneDTO.class));
+        verifyNoMoreInteractions(droneService);
+    }
+    
+    @Test
+    void testDroneRegisterWithUnSavedDrone() throws Exception {
+        DroneDTO droneDTO = new DroneDTO();
+        droneDTO.setId(0);
+        droneDTO.setBattery(90.0);
+        droneDTO.setModel(Model.Cruiserweight);
+        droneDTO.setSerialNumber("AQFG782U9053");
+        droneDTO.setWeight(new BigDecimal(150));
+        droneDTO.setState(State.LOADING);
+
+        when(droneService.create(any(DroneDTO.class))).thenReturn(Optional.empty());
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/drones/register")
+                .content(Formatter.asJsonString(droneDTO))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isBadRequest());
+        verify(droneService, times(1)).create(any(DroneDTO.class));
         verifyNoMoreInteractions(droneService);
     }
 
