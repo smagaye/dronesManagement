@@ -4,7 +4,6 @@ import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
-import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -140,8 +139,10 @@ class DroneChargingServiceImplTests {
         medicationDTO.setWeight(45);
 
         droneChargingItemDTO = new DroneChargingItemDTO();
+        droneChargingItemDTO.setId(1);
         droneChargingItemDTO.setQuantity(2);
         droneChargingItemDTO.setMedication(medicationDTO);
+        droneChargingItemDTO.setDroneCharging(droneChargingDTO);
 
         droneChargingItems = Arrays.asList(droneChargingItem);
     }
@@ -182,7 +183,7 @@ class DroneChargingServiceImplTests {
     }
 
     @Test
-    void testGetMeicationsByDroneId() {
+    void testGetMedicationsByDroneId() {
         when(droneChargingRepo.findFirstByDroneId(drone.getId(), Sort.by(Sort.Direction.DESC, "id")))
                 .thenReturn(Optional.of(droneCharging));
 

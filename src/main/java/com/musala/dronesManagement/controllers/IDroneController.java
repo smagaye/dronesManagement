@@ -54,7 +54,7 @@ public interface IDroneController {
                     @Content(mediaType = "application/json", schema = @Schema(implementation = DroneDTO.class)) }),
             @ApiResponse(responseCode = "400", description = "Invalid id supplied", content = @Content),
             @ApiResponse(responseCode = "404", description = "Drone not found", content = @Content) })
-    @GetMapping("/{id}/medications/")
+    @GetMapping("/{id}/medications")
     public ResponseEntity<?> getMedicationsByDroneId(
             @Parameter(description = "id of drone to be searched") @PathVariable("id") long id);
 

@@ -37,6 +37,7 @@ import com.musala.dronesManagement.dto.CreateChargingItemDTO;
 import com.musala.dronesManagement.dto.DroneChargingDTO;
 import com.musala.dronesManagement.dto.DroneDTO;
 import com.musala.dronesManagement.dto.MedicationDTO;
+import com.musala.dronesManagement.enums.ChargingState;
 import com.musala.dronesManagement.enums.Model;
 import com.musala.dronesManagement.enums.State;
 import com.musala.dronesManagement.helper.Formatter;
@@ -86,6 +87,7 @@ class DroneControllerImplTests {
         droneChargingDTO.setDrone(drone1);
         droneChargingDTO.setCreatedAt(new Date());
         droneChargingDTO.setUpdatedAt(new Date());
+        droneChargingDTO.setState(ChargingState.LOADING);
 
         MedicationDTO medicationDTO = new MedicationDTO();
 
@@ -243,6 +245,16 @@ class DroneControllerImplTests {
         mockMvc.perform(MockMvcRequestBuilders
                 .put("/drones/medications/updload/{id}", drone1.getId())
                 .content(Formatter.asJsonString(Arrays.asList(item1)))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isOk());
+    }
+    
+    @Test
+    void testGetMedicationByDrone() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                .get("/drones/{id}/medications", drone1.getId())
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
 
