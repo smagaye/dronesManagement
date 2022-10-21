@@ -55,7 +55,7 @@ public interface IDroneController {
             @ApiResponse(responseCode = "400", description = "Invalid id supplied", content = @Content),
             @ApiResponse(responseCode = "404", description = "Drone not found", content = @Content) })
     @GetMapping("/{id}/medications/")
-    public ResponseEntity<?> getMedicationByDroneId(
+    public ResponseEntity<?> getMedicationsByDroneId(
             @Parameter(description = "id of drone to be searched") @PathVariable("id") long id);
 
 }

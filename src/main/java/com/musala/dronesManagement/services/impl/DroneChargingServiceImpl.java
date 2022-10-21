@@ -6,6 +6,7 @@ import java.util.stream.Collectors;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -15,6 +16,7 @@ import com.musala.dronesManagement.dto.CreateChargingItemDTO;
 import com.musala.dronesManagement.dto.DroneChargingDTO;
 import com.musala.dronesManagement.dto.DroneChargingItemDTO;
 import com.musala.dronesManagement.dto.DroneDTO;
+import com.musala.dronesManagement.dto.MedicationDTO;
 import com.musala.dronesManagement.enums.State;
 import com.musala.dronesManagement.repositories.IDroneChargingItemRepository;
 import com.musala.dronesManagement.repositories.IDroneChargingRepository;
@@ -73,6 +75,22 @@ public class DroneChargingServiceImpl implements IDroneChargingService {
                 .collect(Collectors.toList());
 
         return Optional.of(droneChargingSaved);
+    }
+
+    @Override
+    public List<MedicationDTO> getMedicationsByDroneId(long droneId) {
+        // Retrieve last droneCharging by id
+        Optional<DroneCharging> lastCharging = droneChargingRepo.findFirstByDroneId(droneId,
+                Sort.by(Sort.Direction.DESC, "id"));
+        if (lastCharging.isPresent()) {
+            // Get medication for last droneCharging
+            List<MedicationDTO> list = droneChargingItemRepo.findByDroneChargingId(lastCharging.get().getId()).stream()
+                    .map(item -> modelMapper.map(item.getMedication(), MedicationDTO.class))
+                    .collect(Collectors.toList());
+
+            return list;
+        }
+        return null;
     }
 
 }

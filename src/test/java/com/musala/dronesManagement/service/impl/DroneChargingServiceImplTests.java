@@ -1,8 +1,10 @@
 package com.musala.dronesManagement.service.impl;
 
+import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
+import static org.mockito.Mockito.lenient;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -11,6 +13,7 @@ import static org.mockito.Mockito.when;
 import java.math.BigDecimal;
 import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
@@ -23,6 +26,7 @@ import org.mockito.Mock;
 import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
+import org.springframework.data.domain.Sort;
 
 import com.musala.dronesManagement.bo.Drone;
 import com.musala.dronesManagement.bo.DroneCharging;
@@ -71,6 +75,7 @@ class DroneChargingServiceImplTests {
     private static CreateChargingItemDTO item1;
     private static DroneChargingItem droneChargingItem;
     private static DroneChargingItemDTO droneChargingItemDTO;
+    private static List<DroneChargingItem> droneChargingItems;
 
     @BeforeAll
     static void setUpBeforeClass() throws Exception {
@@ -137,6 +142,8 @@ class DroneChargingServiceImplTests {
         droneChargingItemDTO = new DroneChargingItemDTO();
         droneChargingItemDTO.setQuantity(2);
         droneChargingItemDTO.setMedication(medicationDTO);
+
+        droneChargingItems = Arrays.asList(droneChargingItem);
     }
 
     @BeforeEach
@@ -171,6 +178,20 @@ class DroneChargingServiceImplTests {
                 Arrays.asList(item1));
 
         assertTrue(response.isPresent());
+
+    }
+
+    @Test
+    void testGetMeicationsByDroneId() {
+        when(droneChargingRepo.findFirstByDroneId(drone.getId(), Sort.by(Sort.Direction.DESC, "id")))
+                .thenReturn(Optional.of(droneCharging));
+
+        when(droneChargingItemRepo.findByDroneChargingId(droneCharging.getId()))
+                .thenReturn(droneChargingItems);
+
+        List<MedicationDTO> medications = droneChargingService.getMedicationsByDroneId(drone.getId());
+        
+        assertEquals(1, medications.size());
 
     }
 
