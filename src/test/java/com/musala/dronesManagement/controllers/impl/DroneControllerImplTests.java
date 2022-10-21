@@ -234,7 +234,7 @@ class DroneControllerImplTests {
                 .andDo(print())
                 .andExpect(content().contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
-                .andExpect(jsonPath("$.level").value(drone1.getBattery().longValue() + "%"));
+                .andExpect(jsonPath("$.level").value(drone1.getBattery().toString() + "%"));
 
         verify(droneService, times(1)).checkDroneBatteryById(drone1.getId());
         verifyNoMoreInteractions(droneService);
