@@ -1,7 +1,7 @@
 package com.musala.dronesManagement.controllers.impl;
 
 import static org.hamcrest.CoreMatchers.is;
-import static org.mockito.Mockito.lenient;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.Mockito.times;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
@@ -13,14 +13,13 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
 
 import java.math.BigDecimal;
-import java.math.BigInteger;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 
 import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -34,10 +33,14 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
 import com.musala.dronesManagement.dto.BatteryLevel;
+import com.musala.dronesManagement.dto.CreateChargingItemDTO;
+import com.musala.dronesManagement.dto.DroneChargingDTO;
 import com.musala.dronesManagement.dto.DroneDTO;
+import com.musala.dronesManagement.dto.MedicationDTO;
 import com.musala.dronesManagement.enums.Model;
 import com.musala.dronesManagement.enums.State;
 import com.musala.dronesManagement.helper.Formatter;
+import com.musala.dronesManagement.services.IDroneChargingService;
 import com.musala.dronesManagement.services.IDroneService;
 
 @DisplayName("Test Class DroneController")
@@ -49,12 +52,17 @@ class DroneControllerImplTests {
     @Mock
     private IDroneService droneService;
 
+    @Mock
+    private IDroneChargingService droneChargingService;
+
     @InjectMocks
     private DroneControllerImpl droneController;
 
     private static DroneDTO drone1;
-
     private static DroneDTO drone2;
+    private static DroneChargingDTO droneChargingDTO;
+
+    private static CreateChargingItemDTO item1;
 
     @BeforeAll
     static void setUpBeforeClass() throws Exception {
@@ -73,6 +81,24 @@ class DroneControllerImplTests {
         drone2.setWeight(new BigDecimal(150));
         drone2.setState(State.IDLE);
 
+        droneChargingDTO = new DroneChargingDTO();
+        droneChargingDTO.setId(1);
+        droneChargingDTO.setDrone(drone1);
+        droneChargingDTO.setCreatedAt(new Date());
+        droneChargingDTO.setUpdatedAt(new Date());
+
+        MedicationDTO medicationDTO = new MedicationDTO();
+
+        medicationDTO.setCode("PSFG8080001");
+        medicationDTO.setId(3);
+        medicationDTO.setImage("https://api.v2/images/PSFG8080001.png");
+        medicationDTO.setName("CLOMID");
+        medicationDTO.setWeight(45);
+
+        item1 = new CreateChargingItemDTO();
+        item1.setQuantity(1);
+        item1.setMedication(medicationDTO);
+
     }
 
     @BeforeEach
@@ -82,26 +108,88 @@ class DroneControllerImplTests {
     }
 
     @Test
-    @Disabled("Disabled until RegistryDrone is up!")
     void testDroneRegister() throws Exception {
         DroneDTO droneDTO = new DroneDTO();
         droneDTO.setId(0);
         droneDTO.setBattery(90.0);
         droneDTO.setModel(Model.Cruiserweight);
-        droneDTO.setSerialNumber("AQFG782u9053");
+        droneDTO.setSerialNumber("AQFG782U9053");
         droneDTO.setWeight(new BigDecimal(150));
-        droneDTO.setState(State.IDLE);
+        droneDTO.setState(State.LOADING);
 
-        lenient().when(droneService.create(droneDTO)).thenReturn(Optional.of(droneDTO));
+        when(droneService.create(any(DroneDTO.class))).thenReturn(Optional.of(droneDTO));
         mockMvc.perform(MockMvcRequestBuilders
                 .post("/drones/register")
-                .content(Formatter.asJsonString(drone2))
+                .content(Formatter.asJsonString(droneDTO))
                 .accept(MediaType.APPLICATION_JSON)
                 .contentType(MediaType.APPLICATION_JSON))
 
                 .andExpect(status().isCreated())
                 .andExpect(MockMvcResultMatchers.jsonPath("$.serialNumber").value(droneDTO.getSerialNumber()));
-        verify(droneService, times(1)).create(droneDTO);
+        verify(droneService, times(1)).create(any(DroneDTO.class));
+        verifyNoMoreInteractions(droneService);
+    }
+
+    @Test
+    void testDroneRegisterWithInvalidId() throws Exception {
+        DroneDTO droneDTO = new DroneDTO();
+        droneDTO.setId(10);
+        droneDTO.setBattery(90.0);
+        droneDTO.setModel(Model.Cruiserweight);
+        droneDTO.setSerialNumber("AQFG782U9053");
+        droneDTO.setWeight(new BigDecimal(150));
+        droneDTO.setState(State.LOADING);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/drones/register")
+                .content(Formatter.asJsonString(droneDTO))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isBadRequest());
+        verify(droneService, times(0)).create(any(DroneDTO.class));
+        verifyNoMoreInteractions(droneService);
+    }
+    
+    @Test
+    void testDroneRegisterWithInvalidBatteryValue() throws Exception {
+        DroneDTO droneDTO = new DroneDTO();
+        droneDTO.setId(0);
+        droneDTO.setBattery(900.0);
+        droneDTO.setModel(Model.Cruiserweight);
+        droneDTO.setSerialNumber("AQFG782U9053");
+        droneDTO.setWeight(new BigDecimal(150));
+        droneDTO.setState(State.LOADING);
+
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/drones/register")
+                .content(Formatter.asJsonString(droneDTO))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isBadRequest());
+
+    }
+
+    @Test
+    void testDroneRegisterWithUnSavedDrone() throws Exception {
+        DroneDTO droneDTO = new DroneDTO();
+        droneDTO.setId(0);
+        droneDTO.setBattery(90.0);
+        droneDTO.setModel(Model.Cruiserweight);
+        droneDTO.setSerialNumber("AQFG782U9053");
+        droneDTO.setWeight(new BigDecimal(150));
+        droneDTO.setState(State.LOADING);
+
+        when(droneService.create(any(DroneDTO.class))).thenReturn(Optional.empty());
+        mockMvc.perform(MockMvcRequestBuilders
+                .post("/drones/register")
+                .content(Formatter.asJsonString(droneDTO))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isBadRequest());
+        verify(droneService, times(1)).create(any(DroneDTO.class));
         verifyNoMoreInteractions(droneService);
     }
 
@@ -148,6 +236,17 @@ class DroneControllerImplTests {
 
         verify(droneService, times(1)).checkDroneBatteryById(drone1.getId());
         verifyNoMoreInteractions(droneService);
+    }
+
+    @Test
+    void testUpdloadMedicationForDrone() throws Exception {
+        mockMvc.perform(MockMvcRequestBuilders
+                .put("/drones/medications/updload/{id}", drone1.getId())
+                .content(Formatter.asJsonString(Arrays.asList(item1)))
+                .accept(MediaType.APPLICATION_JSON)
+                .contentType(MediaType.APPLICATION_JSON))
+
+                .andExpect(status().isOk());
     }
 
 }
