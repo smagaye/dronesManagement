@@ -75,7 +75,8 @@ We offer the class diagram below
 
 ### Development Environnement
 ### Requirements
-- Install Git in your machine
+- JDK 11
+- Install Git Bash for if you are using windows
 - Clone project with following command
 ```bash
 git clone
@@ -89,7 +90,7 @@ You must run this command for downloading all dependencies project
 ```
 ### Unit Tests and Coverage
 ```bash
-./mvnw  test
+./mvnw test
 ```
 After runing test you can see coverage results in folder ./target/site/jacoco/index.html
 
@@ -118,5 +119,11 @@ API Documentation is avalaible. You can test it! http://localhost:8080/h2-consol
 ![Diagram Class](docs/h2-database.png)
 
 #### History Commit Snapshots
+For each feature we create a branch. After we are done, we do a pull request on the remote repository.
+- Graph
 
 ![Diagram Class](docs/commit-history.png)
+
+- Pull Request Example 
+
+![Diagram Class](docs/pr.png)
