@@ -14,6 +14,6 @@ public interface IDroneChargingRepository extends JpaRepository<DroneCharging, L
 
     List<DroneCharging> findByDroneId(long id);
 
-    Optional<DroneCharging> findFirstByDroneId(long droneId, Sort by);
+    Optional<DroneCharging> findFirstByDroneId(long droneId, Sort sort);
 
 }
