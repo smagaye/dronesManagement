@@ -17,7 +17,6 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import com.musala.dronesManagement.enums.ChargingState;
-import com.musala.dronesManagement.enums.State;
 
 @Entity
 public class DroneCharging {

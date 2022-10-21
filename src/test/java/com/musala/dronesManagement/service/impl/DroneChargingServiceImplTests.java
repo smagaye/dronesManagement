@@ -191,7 +191,7 @@ class DroneChargingServiceImplTests {
                 .thenReturn(droneChargingItems);
 
         List<MedicationDTO> medications = droneChargingService.getMedicationsByDroneId(drone.getId());
-        
+
         assertEquals(1, medications.size());
 
     }
