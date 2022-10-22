@@ -24,7 +24,7 @@ public class LowBatteryTask {
     public void scheduleFixedRateWithInitialDelayTask() {
         List<DroneDTO> list = droneService.getDroneBatteryLessThan(25);
 
-        list.forEach(e -> LOGGER.warn("Drone {} - serial {} - Battery Low statement {}%", e.getId(), e.getSerialNumber(),
+        list.forEach(e -> LOGGER.warn("Drone {} - serial {} - Battery Low {}%", e.getId(), e.getSerialNumber(),
                 e.getBattery().toString()));
 
     }

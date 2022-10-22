@@ -109,6 +109,11 @@ if you want start application you should run following command
 ```
 Application will be started at Port 8080
 
+There is a scheduled task that detects drones with low battery.
+The path to the file containing the alert messages is ./tmp/logs/drones-management-app.log
+
+![Diagram Class](docs/scheduler-battery-log.png)
+
 #### Documentation
 API Documentation is avalaible. You can test endpoints! http://localhost:8080/documentation
 

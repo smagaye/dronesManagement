@@ -33,4 +33,4 @@ build/
 .vscode/
 
 # Ignore
-tmp/logs/drones-management-app.log
+tmp/

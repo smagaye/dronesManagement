@@ -17,6 +17,7 @@ import com.musala.dronesManagement.dto.DroneChargingDTO;
 import com.musala.dronesManagement.dto.DroneChargingItemDTO;
 import com.musala.dronesManagement.dto.DroneDTO;
 import com.musala.dronesManagement.dto.MedicationDTO;
+import com.musala.dronesManagement.enums.ChargingState;
 import com.musala.dronesManagement.enums.State;
 import com.musala.dronesManagement.repositories.IDroneChargingItemRepository;
 import com.musala.dronesManagement.repositories.IDroneChargingRepository;
@@ -65,6 +66,7 @@ public class DroneChargingServiceImpl implements IDroneChargingService {
 
         DroneChargingDTO droneChargingToSave = new DroneChargingDTO();
         droneChargingToSave.setDrone(currentDrone);
+        droneChargingToSave.setState(ChargingState.LOADING);
 
         final DroneChargingDTO droneChargingSaved = create(droneChargingToSave).get();
 
