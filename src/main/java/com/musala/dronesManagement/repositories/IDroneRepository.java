@@ -12,5 +12,7 @@ import com.musala.dronesManagement.enums.State;
 public interface IDroneRepository extends JpaRepository<Drone, Long>{
 
 	List<Drone> findByState(State state);
+	
+	List<Drone> findByBatteryLessThan(double level);
 
 }

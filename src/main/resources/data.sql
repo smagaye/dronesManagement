@@ -18,3 +18,12 @@ INSERT INTO MEDICATION (`code`, `image`, `weight`, `name`) values ('MED_53785k39
 INSERT INTO MEDICATION (`code`, `image`, `weight`, `name`) values ('MED_53785k39107', 'https://api.v2/images/MED53785k39107.png', 287, 'Amodiaquine');
 INSERT INTO MEDICATION (`code`, `image`, `weight`, `name`) values ('MED_53785k39108', 'https://api.v2/images/MED53785k39108.png', 100, 'Cetamil');
 INSERT INTO MEDICATION (`code`, `image`, `weight`, `name`) values ('MED_53785k39109', 'https://api.v2/images/MED53785k39109.png', 250, 'Voltarene');
+INSERT INTO DRONE_CHARGING(`drone_id`, `state`, `created_at`, `updated_at`) values ('1', 'DELIVERED', now(), now());
+INSERT INTO DRONE_CHARGING(`drone_id`, `state`, `created_at`, `updated_at`) values ('1', 'LOADING', now(), now());
+INSERT INTO DRONE_CHARGING(`drone_id`, `state`, `created_at`, `updated_at`) values ('5', 'RETURNING', now(), now());
+INSERT INTO DRONE_CHARGING_ITEM(`quantity`, `drone_charging_id`,`medication_id`) values (1, 1, 4);
+INSERT INTO DRONE_CHARGING_ITEM(`quantity`, `drone_charging_id`,`medication_id`) values (1, 1, 5);
+INSERT INTO DRONE_CHARGING_ITEM(`quantity`, `drone_charging_id`,`medication_id`) values (1, 2, 1);
+INSERT INTO DRONE_CHARGING_ITEM(`quantity`, `drone_charging_id`,`medication_id`) values (1, 2, 9);
+INSERT INTO DRONE_CHARGING_ITEM(`quantity`, `drone_charging_id`,`medication_id`) values (1, 2, 3);
+INSERT INTO DRONE_CHARGING_ITEM(`quantity`, `drone_charging_id`,`medication_id`) values (2, 3, 7);

@@ -75,10 +75,17 @@ We offer the class diagram below
 
 ### Development Environnement
 ### Requirements
-- Install Git in your machine
+- JDK 11
+- Install Git Bash for if you are using windows
+
+#### Installation
+- Open your terminal
 - Clone project with following command
 ```bash
-git clone
+git clone https://github.com/smagaye/dronesManagement.git
+```
+- Go to the project directory
+```bash
 cd dronesManagement
 ```
 
@@ -89,7 +96,7 @@ You must run this command for downloading all dependencies project
 ```
 ### Unit Tests and Coverage
 ```bash
-./mvnw  test
+./mvnw test
 ```
 After runing test you can see coverage results in folder ./target/site/jacoco/index.html
 
@@ -101,6 +108,11 @@ if you want start application you should run following command
 ./mvnw spring-boot:run
 ```
 Application will be started at Port 8080
+
+There is a scheduled task that detects drones with low battery.
+The path to the file containing the alert messages is ./tmp/logs/drones-management-app.log
+
+![Diagram Class](docs/scheduler-battery-log.png)
 
 #### Documentation
 API Documentation is avalaible. You can test endpoints! http://localhost:8080/documentation
@@ -118,5 +130,11 @@ API Documentation is avalaible. You can test it! http://localhost:8080/h2-consol
 ![Diagram Class](docs/h2-database.png)
 
 #### History Commit Snapshots
+For each feature we create a branch. After we are done, we do a pull request on the remote repository.
+- Graph
 
 ![Diagram Class](docs/commit-history.png)
+
+- Pull Request Example 
+
+![Diagram Class](docs/pr.png)

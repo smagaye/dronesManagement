@@ -53,4 +53,11 @@ public class DroneServiceImpl implements IDroneService {
 		return Optional.empty();
 	}
 
+    @Override
+    public List<DroneDTO> getDroneBatteryLessThan(double percent) {
+        List<DroneDTO> list = droneRepository.findByBatteryLessThan(percent).stream().map(a -> mapper.map(a, DroneDTO.class))
+                .collect(Collectors.toList());
+        return list;
+    }
+
 }

@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.musala.dronesManagement.controllers.IDroneController;
 import com.musala.dronesManagement.dto.CreateChargingItemDTO;
 import com.musala.dronesManagement.dto.DroneDTO;
+import com.musala.dronesManagement.dto.MedicationDTO;
 import com.musala.dronesManagement.enums.State;
 import com.musala.dronesManagement.services.IDroneChargingService;
 import com.musala.dronesManagement.services.IDroneService;
@@ -46,14 +47,9 @@ public class DroneControllerImpl implements IDroneController {
     }
 
     @Override
-    public ResponseEntity<?> getMedicationByDroneId(long id) {
-        Optional<DroneDTO> droneFound = droneService.findDroneById(id);
-
-        if (droneFound.isPresent()) {
-            return new ResponseEntity<>(droneFound.get(), HttpStatus.OK);
-        } else {
-            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
-        }
+    public ResponseEntity<?> getMedicationsByDroneId(long id) {
+        List<MedicationDTO> medications = droneChargingService.getMedicationsByDroneId(id);
+     return new ResponseEntity<>(medications, HttpStatus.OK);
 
     }
 

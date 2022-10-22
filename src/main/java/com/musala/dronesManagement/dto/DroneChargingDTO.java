@@ -2,11 +2,15 @@ package com.musala.dronesManagement.dto;
 
 import java.util.Date;
 
+import com.musala.dronesManagement.enums.ChargingState;
+
 public class DroneChargingDTO {
 
     private long id;
 
     private DroneDTO drone;
+    
+    private ChargingState state;
 
     private Date createdAt;
 
@@ -26,6 +30,14 @@ public class DroneChargingDTO {
 
     public void setDrone(DroneDTO drone) {
         this.drone = drone;
+    }
+
+    public ChargingState getState() {
+        return state;
+    }
+
+    public void setState(ChargingState state) {
+        this.state = state;
     }
 
     public Date getCreatedAt() {
