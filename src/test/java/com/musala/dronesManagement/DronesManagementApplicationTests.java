@@ -1,4 +1,4 @@
-package com.musala.dronesManagement;
+package com.musala.dronesmanagement;
 
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;

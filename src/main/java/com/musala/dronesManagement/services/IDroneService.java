@@ -1,10 +1,10 @@
-package com.musala.dronesManagement.services;
+package com.musala.dronesmanagement.services;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.musala.dronesManagement.dto.DroneDTO;
-import com.musala.dronesManagement.enums.State;
+import com.musala.dronesmanagement.dto.DroneDTO;
+import com.musala.dronesmanagement.enums.State;
 
 public interface IDroneService {
 

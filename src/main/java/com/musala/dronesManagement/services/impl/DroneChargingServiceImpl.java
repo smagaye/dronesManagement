@@ -1,4 +1,4 @@
-package com.musala.dronesManagement.services.impl;
+package com.musala.dronesmanagement.services.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -10,19 +10,19 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import com.musala.dronesManagement.bo.DroneCharging;
-import com.musala.dronesManagement.bo.DroneChargingItem;
-import com.musala.dronesManagement.dto.CreateChargingItemDTO;
-import com.musala.dronesManagement.dto.DroneChargingDTO;
-import com.musala.dronesManagement.dto.DroneChargingItemDTO;
-import com.musala.dronesManagement.dto.DroneDTO;
-import com.musala.dronesManagement.dto.MedicationDTO;
-import com.musala.dronesManagement.enums.ChargingState;
-import com.musala.dronesManagement.enums.State;
-import com.musala.dronesManagement.repositories.IDroneChargingItemRepository;
-import com.musala.dronesManagement.repositories.IDroneChargingRepository;
-import com.musala.dronesManagement.services.IDroneChargingService;
-import com.musala.dronesManagement.services.IDroneService;
+import com.musala.dronesmanagement.bo.DroneCharging;
+import com.musala.dronesmanagement.bo.DroneChargingItem;
+import com.musala.dronesmanagement.dto.CreateChargingItemDTO;
+import com.musala.dronesmanagement.dto.DroneChargingDTO;
+import com.musala.dronesmanagement.dto.DroneChargingItemDTO;
+import com.musala.dronesmanagement.dto.DroneDTO;
+import com.musala.dronesmanagement.dto.MedicationDTO;
+import com.musala.dronesmanagement.enums.ChargingState;
+import com.musala.dronesmanagement.enums.State;
+import com.musala.dronesmanagement.repositories.IDroneChargingItemRepository;
+import com.musala.dronesmanagement.repositories.IDroneChargingRepository;
+import com.musala.dronesmanagement.services.IDroneChargingService;
+import com.musala.dronesmanagement.services.IDroneService;
 
 @Service
 public class DroneChargingServiceImpl implements IDroneChargingService {

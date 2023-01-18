@@ -1,4 +1,4 @@
-package com.musala.dronesManagement.dto;
+package com.musala.dronesmanagement.dto;
 
 public class CreateChargingItemDTO {
 

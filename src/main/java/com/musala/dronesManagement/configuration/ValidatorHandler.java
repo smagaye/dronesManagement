@@ -1,4 +1,4 @@
-package com.musala.dronesManagement.configuration;
+package com.musala.dronesmanagement.configuration;
 
 
 import java.util.HashMap;

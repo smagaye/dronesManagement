@@ -1,4 +1,4 @@
-package com.musala.dronesManagement.scheduler;
+package com.musala.dronesmanagement.scheduler;
 
 import java.util.List;
 
@@ -9,8 +9,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.scheduling.annotation.EnableScheduling;
 import org.springframework.scheduling.annotation.Scheduled;
 
-import com.musala.dronesManagement.dto.DroneDTO;
-import com.musala.dronesManagement.services.IDroneService;
+import com.musala.dronesmanagement.dto.DroneDTO;
+import com.musala.dronesmanagement.services.IDroneService;
 
 @Configuration
 @EnableScheduling

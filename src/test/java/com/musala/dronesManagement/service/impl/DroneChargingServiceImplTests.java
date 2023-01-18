@@ -1,4 +1,4 @@
-package com.musala.dronesManagement.service.impl;
+package com.musala.dronesmanagement.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertNotNull;
@@ -27,22 +27,22 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 import org.springframework.data.domain.Sort;
 
-import com.musala.dronesManagement.bo.Drone;
-import com.musala.dronesManagement.bo.DroneCharging;
-import com.musala.dronesManagement.bo.DroneChargingItem;
-import com.musala.dronesManagement.bo.Medication;
-import com.musala.dronesManagement.dto.CreateChargingItemDTO;
-import com.musala.dronesManagement.dto.DroneChargingDTO;
-import com.musala.dronesManagement.dto.DroneChargingItemDTO;
-import com.musala.dronesManagement.dto.DroneDTO;
-import com.musala.dronesManagement.dto.MedicationDTO;
-import com.musala.dronesManagement.enums.Model;
-import com.musala.dronesManagement.enums.State;
-import com.musala.dronesManagement.repositories.IDroneChargingItemRepository;
-import com.musala.dronesManagement.repositories.IDroneChargingRepository;
-import com.musala.dronesManagement.services.IDroneChargingService;
-import com.musala.dronesManagement.services.IDroneService;
-import com.musala.dronesManagement.services.impl.DroneChargingServiceImpl;
+import com.musala.dronesmanagement.bo.Drone;
+import com.musala.dronesmanagement.bo.DroneCharging;
+import com.musala.dronesmanagement.bo.DroneChargingItem;
+import com.musala.dronesmanagement.bo.Medication;
+import com.musala.dronesmanagement.dto.CreateChargingItemDTO;
+import com.musala.dronesmanagement.dto.DroneChargingDTO;
+import com.musala.dronesmanagement.dto.DroneChargingItemDTO;
+import com.musala.dronesmanagement.dto.DroneDTO;
+import com.musala.dronesmanagement.dto.MedicationDTO;
+import com.musala.dronesmanagement.enums.Model;
+import com.musala.dronesmanagement.enums.State;
+import com.musala.dronesmanagement.repositories.IDroneChargingItemRepository;
+import com.musala.dronesmanagement.repositories.IDroneChargingRepository;
+import com.musala.dronesmanagement.services.IDroneChargingService;
+import com.musala.dronesmanagement.services.IDroneService;
+import com.musala.dronesmanagement.services.impl.DroneChargingServiceImpl;
 
 @DisplayName("Test Class DroneService")
 @ExtendWith(MockitoExtension.class)

@@ -1,11 +1,11 @@
-package com.musala.dronesManagement.services;
+package com.musala.dronesmanagement.services;
 
 import java.util.List;
 import java.util.Optional;
 
-import com.musala.dronesManagement.dto.CreateChargingItemDTO;
-import com.musala.dronesManagement.dto.DroneChargingDTO;
-import com.musala.dronesManagement.dto.MedicationDTO;
+import com.musala.dronesmanagement.dto.CreateChargingItemDTO;
+import com.musala.dronesmanagement.dto.DroneChargingDTO;
+import com.musala.dronesmanagement.dto.MedicationDTO;
 
 public interface IDroneChargingService {
 

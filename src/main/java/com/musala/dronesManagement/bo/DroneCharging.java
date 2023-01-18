@@ -1,4 +1,4 @@
-package com.musala.dronesManagement.bo;
+package com.musala.dronesmanagement.bo;
 
 import java.util.Date;
 
@@ -16,7 +16,7 @@ import javax.persistence.TemporalType;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.musala.dronesManagement.enums.ChargingState;
+import com.musala.dronesmanagement.enums.ChargingState;
 
 @Entity
 public class DroneCharging {

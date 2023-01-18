@@ -1,4 +1,4 @@
-package com.musala.dronesManagement.bo;
+package com.musala.dronesmanagement.bo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;

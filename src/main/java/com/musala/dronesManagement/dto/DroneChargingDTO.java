@@ -1,8 +1,8 @@
-package com.musala.dronesManagement.dto;
+package com.musala.dronesmanagement.dto;
 
 import java.util.Date;
 
-import com.musala.dronesManagement.enums.ChargingState;
+import com.musala.dronesmanagement.enums.ChargingState;
 
 public class DroneChargingDTO {
 

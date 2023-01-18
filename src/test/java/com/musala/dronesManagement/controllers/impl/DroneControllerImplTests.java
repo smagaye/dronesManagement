@@ -1,4 +1,4 @@
-package com.musala.dronesManagement.controllers.impl;
+package com.musala.dronesmanagement.controllers.impl;
 
 import static org.hamcrest.CoreMatchers.is;
 import static org.mockito.ArgumentMatchers.any;
@@ -32,17 +32,17 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.musala.dronesManagement.dto.BatteryLevel;
-import com.musala.dronesManagement.dto.CreateChargingItemDTO;
-import com.musala.dronesManagement.dto.DroneChargingDTO;
-import com.musala.dronesManagement.dto.DroneDTO;
-import com.musala.dronesManagement.dto.MedicationDTO;
-import com.musala.dronesManagement.enums.ChargingState;
-import com.musala.dronesManagement.enums.Model;
-import com.musala.dronesManagement.enums.State;
-import com.musala.dronesManagement.helper.Formatter;
-import com.musala.dronesManagement.services.IDroneChargingService;
-import com.musala.dronesManagement.services.IDroneService;
+import com.musala.dronesmanagement.dto.BatteryLevel;
+import com.musala.dronesmanagement.dto.CreateChargingItemDTO;
+import com.musala.dronesmanagement.dto.DroneChargingDTO;
+import com.musala.dronesmanagement.dto.DroneDTO;
+import com.musala.dronesmanagement.dto.MedicationDTO;
+import com.musala.dronesmanagement.enums.ChargingState;
+import com.musala.dronesmanagement.enums.Model;
+import com.musala.dronesmanagement.enums.State;
+import com.musala.dronesmanagement.helper.Formatter;
+import com.musala.dronesmanagement.services.IDroneChargingService;
+import com.musala.dronesmanagement.services.IDroneService;
 
 @DisplayName("Test Class DroneController")
 @ExtendWith(MockitoExtension.class)

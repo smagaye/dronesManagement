@@ -1,4 +1,4 @@
-package com.musala.dronesManagement.bo;
+package com.musala.dronesmanagement.bo;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
@@ -8,8 +8,8 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 
-import com.musala.dronesManagement.enums.Model;
-import com.musala.dronesManagement.enums.State;
+import com.musala.dronesmanagement.enums.Model;
+import com.musala.dronesmanagement.enums.State;
 
 @Entity
 public class Drone {

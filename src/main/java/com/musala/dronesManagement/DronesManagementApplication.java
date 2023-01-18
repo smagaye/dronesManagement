@@ -1,4 +1,4 @@
-package com.musala.dronesManagement;
+package com.musala.dronesmanagement;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.boot.SpringApplication;

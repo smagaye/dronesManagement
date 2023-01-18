@@ -1,4 +1,4 @@
-package com.musala.dronesManagement.controllers;
+package com.musala.dronesmanagement.controllers;
 
 import java.util.List;
 
@@ -13,9 +13,9 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import com.musala.dronesManagement.dto.CreateChargingItemDTO;
-import com.musala.dronesManagement.dto.DroneDTO;
-import com.musala.dronesManagement.enums.State;
+import com.musala.dronesmanagement.dto.CreateChargingItemDTO;
+import com.musala.dronesmanagement.dto.DroneDTO;
+import com.musala.dronesmanagement.enums.State;
 
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.Parameter;

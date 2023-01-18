@@ -1,4 +1,4 @@
-package com.musala.dronesManagement.service.impl;
+package com.musala.dronesmanagement.service.impl;
 
 import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.junit.jupiter.api.Assertions.assertFalse;
@@ -26,12 +26,12 @@ import org.mockito.Spy;
 import org.mockito.junit.jupiter.MockitoExtension;
 import org.modelmapper.ModelMapper;
 
-import com.musala.dronesManagement.bo.Drone;
-import com.musala.dronesManagement.dto.DroneDTO;
-import com.musala.dronesManagement.enums.Model;
-import com.musala.dronesManagement.enums.State;
-import com.musala.dronesManagement.repositories.IDroneRepository;
-import com.musala.dronesManagement.services.impl.DroneServiceImpl;
+import com.musala.dronesmanagement.bo.Drone;
+import com.musala.dronesmanagement.dto.DroneDTO;
+import com.musala.dronesmanagement.enums.Model;
+import com.musala.dronesmanagement.enums.State;
+import com.musala.dronesmanagement.repositories.IDroneRepository;
+import com.musala.dronesmanagement.services.impl.DroneServiceImpl;
 
 @DisplayName("Test Class DroneService")
 @ExtendWith(MockitoExtension.class)

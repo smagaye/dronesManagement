@@ -1,4 +1,4 @@
-package com.musala.dronesManagement.dto;
+package com.musala.dronesmanagement.dto;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
@@ -7,8 +7,8 @@ import javax.validation.constraints.Max;
 import javax.validation.constraints.NotEmpty;
 import javax.validation.constraints.Size;
 
-import com.musala.dronesManagement.enums.Model;
-import com.musala.dronesManagement.enums.State;
+import com.musala.dronesmanagement.enums.Model;
+import com.musala.dronesmanagement.enums.State;
 
 public class DroneDTO implements Serializable {
 

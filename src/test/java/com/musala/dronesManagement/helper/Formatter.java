@@ -1,4 +1,4 @@
-package com.musala.dronesManagement.helper;
+package com.musala.dronesmanagement.helper;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 

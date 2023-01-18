@@ -1,4 +1,4 @@
-package com.musala.dronesManagement.controllers.impl;
+package com.musala.dronesmanagement.controllers.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,13 +8,13 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
 
-import com.musala.dronesManagement.controllers.IDroneController;
-import com.musala.dronesManagement.dto.CreateChargingItemDTO;
-import com.musala.dronesManagement.dto.DroneDTO;
-import com.musala.dronesManagement.dto.MedicationDTO;
-import com.musala.dronesManagement.enums.State;
-import com.musala.dronesManagement.services.IDroneChargingService;
-import com.musala.dronesManagement.services.IDroneService;
+import com.musala.dronesmanagement.controllers.IDroneController;
+import com.musala.dronesmanagement.dto.CreateChargingItemDTO;
+import com.musala.dronesmanagement.dto.DroneDTO;
+import com.musala.dronesmanagement.dto.MedicationDTO;
+import com.musala.dronesmanagement.enums.State;
+import com.musala.dronesmanagement.services.IDroneChargingService;
+import com.musala.dronesmanagement.services.IDroneService;
 
 @RestController
 public class DroneControllerImpl implements IDroneController {

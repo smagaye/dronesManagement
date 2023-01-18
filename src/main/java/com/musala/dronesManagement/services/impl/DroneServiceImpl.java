@@ -1,4 +1,4 @@
-package com.musala.dronesManagement.services.impl;
+package com.musala.dronesmanagement.services.impl;
 
 import java.util.List;
 import java.util.Optional;
@@ -8,12 +8,12 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.musala.dronesManagement.bo.Drone;
-import com.musala.dronesManagement.dto.BatteryLevel;
-import com.musala.dronesManagement.dto.DroneDTO;
-import com.musala.dronesManagement.enums.State;
-import com.musala.dronesManagement.repositories.IDroneRepository;
-import com.musala.dronesManagement.services.IDroneService;
+import com.musala.dronesmanagement.bo.Drone;
+import com.musala.dronesmanagement.dto.BatteryLevel;
+import com.musala.dronesmanagement.dto.DroneDTO;
+import com.musala.dronesmanagement.enums.State;
+import com.musala.dronesmanagement.repositories.IDroneRepository;
+import com.musala.dronesmanagement.services.IDroneService;
 
 @Service
 public class DroneServiceImpl implements IDroneService {
