@@ -12,7 +12,7 @@
 	<groupId>com.musala</groupId>
 	<artifactId>dronesmanagement</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
-	<name>dronesManagement</name>
+	<name>dronesmanagement</name>
 	<description>Tests for Drones Management</description>
 	<properties>
 		<java.version>11</java.version>
