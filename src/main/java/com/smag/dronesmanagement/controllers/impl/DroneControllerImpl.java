@@ -19,11 +19,16 @@ import com.smag.dronesmanagement.services.IDroneService;
 @RestController
 public class DroneControllerImpl implements IDroneController {
 
-    @Autowired
     private IDroneService droneService;
-
-    @Autowired
     private IDroneChargingService droneChargingService;
+    
+    
+    @Autowired
+    public DroneControllerImpl(IDroneService droneService, IDroneChargingService droneChargingService) {
+        super();
+        this.droneService = droneService;
+        this.droneChargingService = droneChargingService;
+    }
 
     @Override
     public ResponseEntity<?> register(DroneDTO droneDTO) {
