@@ -32,7 +32,6 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
-import com.smag.dronesmanagement.controllers.impl.DroneControllerImpl;
 import com.smag.dronesmanagement.dto.BatteryLevel;
 import com.smag.dronesmanagement.dto.CreateChargingItemDTO;
 import com.smag.dronesmanagement.dto.DroneChargingDTO;
