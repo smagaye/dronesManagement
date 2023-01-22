@@ -31,7 +31,7 @@
 		</encoder>
 	</appender>
 
-	<logger name="com.musala.dronesmanagement.scheduler" level="WARNING"
+	<logger name="com.smag.dronesmanagement.scheduler" level="WARNING"
 		additivity="false">
 		<appender-ref ref="FILE" />
 	</logger>

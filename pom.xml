@@ -9,7 +9,7 @@
 		<version>2.7.4</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.musala</groupId>
+	<groupId>com.smag</groupId>
 	<artifactId>dronesmanagement</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<name>dronesmanagement</name>
@@ -72,6 +72,12 @@
 			<groupId>org.mockito</groupId>
 			<artifactId>mockito-junit-jupiter</artifactId>
 			<scope>test</scope>
+		</dependency>
+		<dependency>
+    		<groupId>com.tngtech.archunit</groupId>
+    		<artifactId>archunit-junit5</artifactId>
+   			<version>1.0.1</version>
+    		<scope>test</scope>
 		</dependency>
 	</dependencies>
 
