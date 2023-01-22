@@ -17,8 +17,14 @@ import com.smag.dronesmanagement.services.IDroneService;
 public class LowBatteryTask {
     private static final Logger LOGGER = LoggerFactory.getLogger(LowBatteryTask.class);
 
-    @Autowired
     private IDroneService droneService;
+    
+    @Autowired
+    public void setDroneService(IDroneService droneService) {
+        this.droneService = droneService;
+    }
+
+
 
     @Scheduled(fixedDelay = 45000, initialDelay = 1000)
     public void scheduleFixedRateWithInitialDelayTask() {
