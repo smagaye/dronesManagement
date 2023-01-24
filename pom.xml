@@ -87,11 +87,6 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
-			<plugin>
-				<groupId>io.jenkins.plugins</groupId>
-				<artifactId>conventional-commits</artifactId>
-				<version>0.11.2</version>
-			</plugin>
 			<!-- JaCoCo - Coverage -->
 			<plugin>
 				<groupId>org.jacoco</groupId>
