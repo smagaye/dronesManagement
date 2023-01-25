@@ -32,6 +32,7 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 
+import com.smag.core.AnnotationTest.UnitTest;
 import com.smag.dronesmanagement.dto.BatteryLevel;
 import com.smag.dronesmanagement.dto.CreateChargingItemDTO;
 import com.smag.dronesmanagement.dto.DroneChargingDTO;
@@ -46,6 +47,7 @@ import com.smag.dronesmanagement.services.IDroneService;
 
 @DisplayName("Test Class DroneController")
 @ExtendWith(MockitoExtension.class)
+@UnitTest
 class DroneControllerImplTests {
 
     private MockMvc mockMvc;
