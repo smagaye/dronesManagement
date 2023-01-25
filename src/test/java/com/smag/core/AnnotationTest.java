@@ -31,4 +31,10 @@ public interface AnnotationTest {
     @Tag("IntegrationTest")
     public @interface IntegrationTest {
     }
+    
+    @Target( {ElementType.TYPE})
+    @Retention(RetentionPolicy.RUNTIME)
+    @Tag("ArchitectureTest")
+    public @interface ArchitectureTest {
+    }
 }

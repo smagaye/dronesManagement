@@ -3,9 +3,9 @@ package com.smag.dronesmanagement.dto;
 import java.io.Serializable;
 import java.math.BigDecimal;
 
-import javax.validation.constraints.Max;
-import javax.validation.constraints.NotEmpty;
-import javax.validation.constraints.Size;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Size;
 
 import com.smag.dronesmanagement.enums.Model;
 import com.smag.dronesmanagement.enums.State;

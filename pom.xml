@@ -6,7 +6,7 @@
 	<parent>
 		<groupId>org.springframework.boot</groupId>
 		<artifactId>spring-boot-starter-parent</artifactId>
-		<version>2.7.4</version>
+		<version>3.0.2</version>
 		<relativePath /> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>com.smag</groupId>
@@ -19,6 +19,7 @@
 		<springdoc.version>1.6.11</springdoc.version>
 		<jacoco.version>0.8.8</jacoco.version>
 		<modelmapper.version>3.0.0</modelmapper.version>
+		<finalName>drones-app</finalName>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -85,9 +86,6 @@
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
-				<configuration>
-					<groups>UnitTest</groups>
-				</configuration>
 			</plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
@@ -113,19 +111,26 @@
 				<artifactId>build-helper-maven-plugin</artifactId>
 				<executions>
 					<execution>
-					<id>add-test-source</id>
-					<phase>process-resources</phase>
-					<goals>
-						<goal>add-test-source</goal>
-					</goals>
-					<configuration>
-						<sources>
-						<source>src/it/java</source>
-						</sources>
-					</configuration>
+						<id>add-test-source</id>
+						<phase>process-resources</phase>
+						<goals>
+							<goal>add-test-source</goal>
+						</goals>
+						<configuration>
+							<sources>
+								<source>src/it/java</source>
+							</sources>
+						</configuration>
 					</execution>
 				</executions>
-				</plugin>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-jar-plugin</artifactId>
+				<configuration>
+					<finalName>${finalName}</finalName>
+				</configuration>
+			</plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
