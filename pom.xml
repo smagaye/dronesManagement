@@ -119,6 +119,7 @@
 						<configuration>
 							<sources>
 								<source>src/it/java</source>
+								<source>src/arch/java</source>
 							</sources>
 						</configuration>
 					</execution>
