@@ -1,0 +1,54 @@
+pipeline {
+  agent any
+  tools {
+      jdk 'JDK 17'
+  }
+  stages {
+      
+    stage('Checkout SCM') {
+      steps {
+        echo 'Pulling...'
+        git branch: 'dev', credentialsId: 'GitHub', url: 'https://github.com/smagaye/dronesManagement'
+      }
+    }
+
+    stage('Architecture Testing') {
+      steps {
+        echo 'Building...'
+        sh '''./mvnw '-Dtest=com.smag.architecture.*RuleTest' test '''
+      }
+    }
+    
+    stage('Unit Testing') {
+      steps {
+        echo 'Building...'
+        sh '''./mvnw test '''
+      }
+    }
+    
+    stage('Integration Testing') {
+      steps {
+        sh '''./mvnw failsafe:integration-test '''
+      }
+    }
+
+    stage('Quality Analysis') {
+      steps {
+        sh '''./mvnw clean verify sonar:sonar -Dsonar.projectKey=qa-drones -Dsonar.host.url=http://localhost:9000 -Dsonar.login=sqp_a2fbad4fb3ad7e945cf7bf83beacb4cb157f32ad
+        '''
+      }
+    }
+
+    stage('Generate Release') {
+      steps {
+        sh '''./mvnw -B -DskipTests clean package -DfinalName=ms-drones-api'''
+      }
+    }
+
+    stage('Build Image') {
+      steps {
+        echo 'Deploy...'
+      }
+    }
+  }
+}
