@@ -15,7 +15,7 @@
 	<name>dronesmanagement</name>
 	<description>Tests for Drones Management</description>
 	<properties>
-		<java.version>11</java.version>
+		<java.version>17</java.version>
 		<springdoc.version>1.6.11</springdoc.version>
 		<jacoco.version>0.8.8</jacoco.version>
 		<modelmapper.version>3.0.0</modelmapper.version>
@@ -83,6 +83,13 @@
 	</dependencies>
 	<build>
 		<plugins>
+		    <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+			<configuration>
+				<finalName>${finalName}</finalName>
+			</configuration>
+        </plugin>
 			<plugin>
 				<groupId>org.apache.maven.plugins</groupId>
 				<artifactId>maven-surefire-plugin</artifactId>
@@ -124,13 +131,6 @@
 						</configuration>
 					</execution>
 				</executions>
-			</plugin>
-			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-jar-plugin</artifactId>
-				<configuration>
-					<finalName>${finalName}</finalName>
-				</configuration>
 			</plugin>
 		</plugins>
 		<pluginManagement>
