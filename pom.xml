@@ -19,7 +19,10 @@
 		<springdoc.version>1.6.11</springdoc.version>
 		<jacoco.version>0.8.8</jacoco.version>
 		<modelmapper.version>3.0.0</modelmapper.version>
-		<finalName>drones-app</finalName>
+		<finalName>ms-drones-api</finalName>
+		<registry.username>${env.REGISTRY_AUTH_USERNAME}</registry.username>
+		<registry.password>${env.REGISTRY_AUTH_PASSWORD}</registry.password>
+		<image.path>${registry.username}/${finalName}</image.path>
 	</properties>
 	<dependencies>
 		<dependency>
@@ -132,6 +135,29 @@
 					<finalName>${finalName}</finalName>
 				</configuration>
 			</plugin>
+			<plugin>
+				<groupId>com.google.cloud.tools</groupId>
+				<artifactId>jib-maven-plugin</artifactId>
+				<version>3.3.1</version>
+                <configuration>
+				    <from>
+              			<image>eclipse-temurin:17-jdk-alpine</image>
+					</from>
+						<container>
+						<ports>
+							<port>8080</port>
+						</ports>
+						<format>OCI</format>
+					</container>
+                    <to>
+                        <image>${image.path}</image>
+						<auth>
+							<username>${registry.username}</username>
+							<password>${registry.password}</password>
+						</auth>
+                    </to>
+                </configuration>
+            </plugin>
 		</plugins>
 		<pluginManagement>
 			<plugins>
