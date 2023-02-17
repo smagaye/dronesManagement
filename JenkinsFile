@@ -15,7 +15,7 @@ pipeline {
     stage('Architecture Testing') {
       steps {
         echo 'Building...'
-        sh '''./mvnw '-Dtest=com.smag.architecture.*RuleTest' test '''
+        sh '''./mvnw '-Dtest=com.smag.architecture.*RuleTest' test'''
       }
     }
     
@@ -34,7 +34,7 @@ pipeline {
 
     stage('Quality Analysis') {
       steps {
-        sh '''./mvnw clean verify sonar:sonar -Dsonar.projectKey=qa-drones -Dsonar.host.url=http://localhost:9000 -Dsonar.login=sqp_a2fbad4fb3ad7e945cf7bf83beacb4cb157f32ad
+        sh '''./mvnw clean verify sonar:sonar -Dsonar.projectKey=drones-qa -Dsonar.host.url=http://localhost:9000 -Dsonar.login=sqp_0326f0baa341a1be1566084beec0aea2903e74e9
         '''
       }
     }
@@ -47,7 +47,7 @@ pipeline {
 
     stage('Build Image') {
       steps {
-        echo 'Deploy...'
+        sh '''./mvnw compile jib:build '''
       }
     }
   }
