@@ -1,54 +1,83 @@
 pipeline {
-  agent any
-  tools {
+    agent any
+    tools {
       jdk 'JDK 17'
-  }
-  stages {
-      
-    stage('Checkout SCM') {
-      steps {
-        echo 'Pulling...'
-        git branch: 'dev', credentialsId: 'GitHub', url: 'https://github.com/smagaye/dronesManagement'
-      }
     }
+    stages {
+        stage('Checkout SCM') {
+            steps {
+              echo 'Pulling...'
+              git branch: 'dev', credentialsId: 'GitHub', url: 'https://github.com/smagaye/dronesManagement'
+            }
+        }
 
-    stage('Architecture Testing') {
-      steps {
-        echo 'Building...'
-        sh '''./mvnw '-Dtest=com.smag.architecture.*RuleTest' test'''
-      }
-    }
-    
-    stage('Unit Testing') {
-      steps {
-        echo 'Building...'
-        sh '''./mvnw test '''
-      }
-    }
-    
-    stage('Integration Testing') {
-      steps {
-        sh '''./mvnw failsafe:integration-test '''
-      }
-    }
+        stage('Architecture Testing') {
+            steps {
+                echo 'Building...'
+                sh '''
+                  ./mvnw clean ' - Dtest = com.smag.architecture.*RuleTest ' test
+                '''
+            }
+            post {
+                failure {
+                  junit 'target/surefire-reports/**/*.xml'
+                }
+            }
+        }
 
-    stage('Quality Analysis') {
-      steps {
-        sh '''./mvnw clean verify sonar:sonar -Dsonar.projectKey=drones-qa -Dsonar.host.url=http://localhost:9000 -Dsonar.login=sqp_0326f0baa341a1be1566084beec0aea2903e74e9
-        '''
-      }
-    }
+        stage('Unit Testing') {
+            steps {
+                sh '''
+                  ./mvnw clean test 
+                '''
+            }
+            post {
+                always {
+                  junit 'target/surefire-reports/**/*.xml'
+                }
+            }
+        }
 
-    stage('Generate Release') {
-      steps {
-        sh '''./mvnw -B -DskipTests clean package -DfinalName=ms-drones-api'''
-      }
-    }
+        stage('Integration Testing') {
+            steps {
+                sh '''
+                  ./mvnw failsafe:integration-test
+                '''
+            }
+            post {
+                always {
+                  junit 'target/failsafe-reports/**/*.xml'
+                }
+            }
+        }
 
-    stage('Build Image') {
-      steps {
-        sh '''./mvnw compile jib:build '''
-      }
+        stage('Quality Analysis') {
+            steps {
+                sh '''
+                  ./mvnw clean verify sonar:sonar -Dsonar.projectKey=drones-qa -Dsonar.host.url=http://localhost:9000 -Dsonar.login=sqp_0326f0baa341a1be1566084beec0aea2903e74e9
+                '''
+            }
+        }
+
+        stage('Generate Release') {
+            steps {
+                sh '''
+                  ./mvnw -B -DskipTests clean package -DfinalName=ms-drones-api
+                '''
+            }
+            post {
+                always {
+                    archiveArtifacts artifacts: 'target/*.jar', fingerprint: true
+                }
+            }
+        }
+
+        stage('Build Image') {
+            steps {
+                sh '''
+                  ./mvnw compile jib:build 
+                '''
+            }
+        }
     }
-  }
 }
