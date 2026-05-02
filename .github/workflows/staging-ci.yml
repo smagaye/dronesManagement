@@ -24,7 +24,7 @@ name: 🚀 Backend CI/CD
 
 on:
   push:
-    branches: [ "feature/staging-ci" ]
+    branches: [ "feature/staging-ci-cd" ]
     paths:
       - "backend/**"
       - ".github/workflows/staging-ci.yml"
@@ -38,7 +38,7 @@ defaults:
     working-directory: ./
 
 env:
-  JAVA_VERSION: '21'
+  JAVA_VERSION: '17'
   ARTIFACT_NAME: my-backend
   NEXUS_URL: https://nexus.example.com/repository/maven-releases
   REGISTRY: registry.example.com
