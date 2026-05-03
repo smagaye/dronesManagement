@@ -66,16 +66,16 @@ on:
 
 defaults:
   run:
-    working-directory: backend               # ← mirror WORKING_DIR if changed
+    working-directory: .               # ← mirror WORKING_DIR if changed
 
 env:
   JAVA_VERSION:      '17'
   JAVA_DISTRIBUTION: temurin
-  WORKING_DIR:       .
-  ARTIFACT_NAME:     my-backend
+  WORKING_DIR:       backend
+  ARTIFACT_NAME:     backend
+  IMAGE_NAME:        backend
   NEXUS_URL:         https://nexus.example.com/repository/maven-releases
   REGISTRY:          registry.example.com
-  IMAGE_NAME:        my-backend
 
 # ─────────────────────────────────────────────
 jobs:
