@@ -21,46 +21,108 @@ name: 🚀 Backend CI/CD
 # PUSH_IMAGE_BLOCKING          true     Image push failures are ignored
 # DEPLOY_STAGING_BLOCKING      true     Staging deploy failures are ignored
 # ─────────────────────────────────────────────────────────────────
+#
+# ─────────────────────────────────────────────────────────────────
+# DYNAMIC NAMING — build-ref
+#
+# All artifacts, reports, and image tags are prefixed with a
+# canonical build reference computed once by the `setup` job:
+#
+#   {ARTIFACT_NAME}-{project.version}-{github.run_number}
+#   e.g.  my-backend-1.4.2-87
+#
+# The `setup` job exposes two outputs consumed downstream:
+#   needs.setup.outputs.build-ref   → full prefix for artifacts
+#   needs.setup.outputs.version     → Maven version (semver Docker tag)
+# ─────────────────────────────────────────────────────────────────
+#
+# ─────────────────────────────────────────────────────────────────
+# ENVIRONMENT VARIABLES — single source of truth
+#
+# WORKING_DIR       Root of the Maven module and Dockerfile.
+#                   Drives every target/ path and the Docker build
+#                   context. Update once here to relocate the module.
+#
+# JAVA_DISTRIBUTION Temurin by default; swap for 'corretto', 'zulu',
+#                   'microsoft', etc. without touching any job.
+#
+# ⚠ GitHub Actions does not allow env vars inside the `on.paths`
+#   trigger or `defaults.run.working-directory`. If you rename
+#   WORKING_DIR, update those two literal values manually:
+#     on.push.paths      → "<WORKING_DIR>/**"
+#     defaults.run.working-directory → <WORKING_DIR>
+# ─────────────────────────────────────────────────────────────────
 
 on:
   push:
     branches: [ "feature/staging-ci-cd" ]
     paths:
-      - "backend/**"
+      - "backend/**"                          # ← mirror WORKING_DIR if changed
       - ".github/workflows/staging-ci.yml"
   pull_request:
     branches: [ "main", "release/**" ]
     paths:
-      - "backend/**"
+      - "backend/**"                          # ← mirror WORKING_DIR if changed
 
 defaults:
   run:
-    working-directory: ./
+    working-directory: backend               # ← mirror WORKING_DIR if changed
 
 env:
-  JAVA_VERSION: '17'
-  ARTIFACT_NAME: my-backend
-  NEXUS_URL: https://nexus.example.com/repository/maven-releases
-  REGISTRY: registry.example.com
-  IMAGE_NAME: my-backend
+  JAVA_VERSION:      '17'
+  JAVA_DISTRIBUTION: temurin
+  WORKING_DIR:       backend
+  ARTIFACT_NAME:     my-backend
+  NEXUS_URL:         https://nexus.example.com/repository/maven-releases
+  REGISTRY:          registry.example.com
+  IMAGE_NAME:        my-backend
 
 # ─────────────────────────────────────────────
 jobs:
+
+  # ─── 0. SETUP ─────────────────────────────
+  setup:
+    name: "⚙️ Setup build ref"
+    runs-on: ubuntu-latest
+    outputs:
+      build-ref: ${{ steps.ref.outputs.build-ref }}
+      version:   ${{ steps.ref.outputs.version }}
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: ☕ Setup Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version:  ${{ env.JAVA_VERSION }}
+          distribution:  ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: 🔖 Compute build reference
+        id: ref
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout -f pom.xml)
+          BUILD_REF="${{ env.ARTIFACT_NAME }}-${VERSION}-${{ github.run_number }}"
+          echo "version=${VERSION}"     >> "$GITHUB_OUTPUT"
+          echo "build-ref=${BUILD_REF}" >> "$GITHUB_OUTPUT"
+          echo "✅ build-ref: ${BUILD_REF}"
+
 
   # ─── 1. SECRET SCAN ───────────────────────
   scan-secrets:
     name: "🔑 Secret scan"
     runs-on: ubuntu-latest
+    needs: setup
     continue-on-error: ${{ vars.SCAN_SECRETS_BLOCKING == 'false' }}
     defaults:
       run:
-        working-directory: .    # Gitleaks scans the entire repo, not just /backend
+        working-directory: .    # Gitleaks scans the entire repo, not just WORKING_DIR
     steps:
       - name: 📥 Checkout (full history)
         uses: actions/checkout@v4
         with:
           fetch-depth: 0
-      
+
       - name: 📥 Install gitleaks
         run: |
           curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.21.2/gitleaks_8.21.2_linux_x64.tar.gz \
@@ -75,7 +137,7 @@ jobs:
   scan-cve:
     name: "🛡️ CVE scan"
     runs-on: ubuntu-latest
-    needs: scan-secrets
+    needs: [ setup, scan-secrets ]
     continue-on-error: ${{ vars.SCAN_CVE_BLOCKING == 'false' }}
     steps:
       - name: 📥 Checkout
@@ -84,8 +146,8 @@ jobs:
       - name: ☕ Setup Java ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: temurin
+          java-version:  ${{ env.JAVA_VERSION }}
+          distribution:  ${{ env.JAVA_DISTRIBUTION }}
           cache: maven
 
       - name: 🔎 Scan dependencies
@@ -98,8 +160,8 @@ jobs:
         uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: owasp-report
-          path: backend/target/dependency-check-report.html
+          name: ${{ needs.setup.outputs.build-ref }}-owasp-report
+          path: ${{ env.WORKING_DIR }}/target/dependency-check-report.html
           retention-days: 7
 
 
@@ -107,7 +169,7 @@ jobs:
   test-architecture:
     name: "🏛️ Architecture tests"
     runs-on: ubuntu-latest
-    needs: scan-cve
+    needs: [ setup, scan-cve ]
     continue-on-error: ${{ vars.TEST_ARCH_BLOCKING == 'false' }}
     steps:
       - name: 📥 Checkout
@@ -116,8 +178,8 @@ jobs:
       - name: ☕ Setup Java ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: temurin
+          java-version:  ${{ env.JAVA_VERSION }}
+          distribution:  ${{ env.JAVA_DISTRIBUTION }}
           cache: maven
 
       - name: 📐 Run architecture rules
@@ -129,8 +191,8 @@ jobs:
       - name: 📤 Upload ArchUnit report
         uses: actions/upload-artifact@v4
         with:
-          name: report-archunit
-          path: backend/target/surefire-reports/
+          name: ${{ needs.setup.outputs.build-ref }}-archunit
+          path: ${{ env.WORKING_DIR }}/target/surefire-reports/
           retention-days: 1
 
 
@@ -138,7 +200,7 @@ jobs:
   test-unit:
     name: "🧪 Unit tests"
     runs-on: ubuntu-latest
-    needs: test-architecture    # architecture must pass before unit tests
+    needs: [ setup, test-architecture ]    # architecture must pass before unit tests
     continue-on-error: ${{ vars.TEST_UNIT_BLOCKING == 'false' }}
     steps:
       - name: 📥 Checkout
@@ -147,8 +209,8 @@ jobs:
       - name: ☕ Setup Java ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: temurin
+          java-version:  ${{ env.JAVA_VERSION }}
+          distribution:  ${{ env.JAVA_DISTRIBUTION }}
           cache: maven
 
       - name: 🧪 Run unit tests
@@ -160,10 +222,10 @@ jobs:
       - name: 📤 Upload unit test + JaCoCo reports
         uses: actions/upload-artifact@v4
         with:
-          name: report-unit
+          name: ${{ needs.setup.outputs.build-ref }}-unit
           path: |
-            backend/target/surefire-reports/
-            backend/target/site/jacoco/jacoco.xml
+            ${{ env.WORKING_DIR }}/target/surefire-reports/
+            ${{ env.WORKING_DIR }}/target/site/jacoco/jacoco.xml
           retention-days: 1
 
 
@@ -171,7 +233,7 @@ jobs:
   test-integration:
     name: "🔗 Integration tests"
     runs-on: ubuntu-latest
-    needs: test-unit            # unit tests must pass before integration tests
+    needs: [ setup, test-unit ]            # unit tests must pass before integration tests
     continue-on-error: ${{ vars.TEST_INTEGRATION_BLOCKING == 'false' }}
     steps:
       - name: 📥 Checkout
@@ -180,8 +242,8 @@ jobs:
       - name: ☕ Setup Java ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: temurin
+          java-version:  ${{ env.JAVA_VERSION }}
+          distribution:  ${{ env.JAVA_DISTRIBUTION }}
           cache: maven
 
       - name: 🔗 Run integration tests
@@ -193,10 +255,10 @@ jobs:
       - name: 📤 Upload integration test + JaCoCo reports
         uses: actions/upload-artifact@v4
         with:
-          name: report-integration
+          name: ${{ needs.setup.outputs.build-ref }}-integration
           path: |
-            backend/target/failsafe-reports/
-            backend/target/site/jacoco-it/jacoco.xml
+            ${{ env.WORKING_DIR }}/target/failsafe-reports/
+            ${{ env.WORKING_DIR }}/target/site/jacoco-it/jacoco.xml
           retention-days: 1
 
 
@@ -205,6 +267,7 @@ jobs:
     name: "📊 Quality gate"
     runs-on: ubuntu-latest
     needs:
+      - setup
       - test-architecture       # ArchUnit Surefire report
       - test-integration        # JaCoCo UT + IT reports (unit already implied via integration)
     continue-on-error: ${{ vars.QUALITY_SONAR_BLOCKING == 'false' }}
@@ -217,31 +280,31 @@ jobs:
       - name: ☕ Setup Java ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: temurin
+          java-version:  ${{ env.JAVA_VERSION }}
+          distribution:  ${{ env.JAVA_DISTRIBUTION }}
           cache: maven
 
       - name: 📥 Download ArchUnit report
         uses: actions/download-artifact@v4
         with:
-          name: report-archunit
-          path: backend/target/surefire-reports/
+          name: ${{ needs.setup.outputs.build-ref }}-archunit
+          path: ${{ env.WORKING_DIR }}/target/surefire-reports/
 
       - name: 📥 Download unit test reports
         uses: actions/download-artifact@v4
         with:
-          name: report-unit
-          path: backend/target/
+          name: ${{ needs.setup.outputs.build-ref }}-unit
+          path: ${{ env.WORKING_DIR }}/target/
 
       - name: 📥 Download integration test reports
         uses: actions/download-artifact@v4
         with:
-          name: report-integration
-          path: backend/target/
+          name: ${{ needs.setup.outputs.build-ref }}-integration
+          path: ${{ env.WORKING_DIR }}/target/
 
       - name: 📊 Run Sonar analysis (no test re-run)
         env:
-          SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+          SONAR_TOKEN:    ${{ secrets.SONAR_TOKEN }}
           SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
         run: |
           mvn sonar:sonar \
@@ -257,10 +320,8 @@ jobs:
   build-artifact:
     name: "📦 Build artifact"
     runs-on: ubuntu-latest
-    needs: quality-sonar
+    needs: [ setup, quality-sonar ]
     continue-on-error: ${{ vars.BUILD_ARTIFACT_BLOCKING == 'false' }}
-    outputs:
-      version: ${{ steps.get-version.outputs.version }}
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
@@ -268,15 +329,9 @@ jobs:
       - name: ☕ Setup Java ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4
         with:
-          java-version: ${{ env.JAVA_VERSION }}
-          distribution: temurin
+          java-version:  ${{ env.JAVA_VERSION }}
+          distribution:  ${{ env.JAVA_DISTRIBUTION }}
           cache: maven
-
-      - name: 🔖 Get project version
-        id: get-version
-        run: |
-          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
-          echo "version=${VERSION}" >> "$GITHUB_OUTPUT"
 
       - name: 🔨 Build (tests already run)
         run: mvn package -DskipTests
@@ -284,8 +339,8 @@ jobs:
       - name: 📤 Upload JAR
         uses: actions/upload-artifact@v4
         with:
-          name: app-jar
-          path: backend/target/*.jar
+          name: ${{ needs.setup.outputs.build-ref }}-jar
+          path: ${{ env.WORKING_DIR }}/target/*.jar
           retention-days: 1
 
 
@@ -293,7 +348,7 @@ jobs:
   push-nexus:                                   # │
     name: "📤 Push Nexus"                       # │
     runs-on: ubuntu-latest                      # │
-    needs: build-artifact                       # │
+    needs: [ setup, build-artifact ]            # │
     continue-on-error: ${{ vars.PUSH_NEXUS_BLOCKING == 'false' }}
     steps:                                      # │
       - name: 📥 Checkout                       # │
@@ -302,8 +357,8 @@ jobs:
       - name: ☕ Setup Java ${{ env.JAVA_VERSION }}
         uses: actions/setup-java@v4             # │
         with:                                   # │
-          java-version: ${{ env.JAVA_VERSION }} # │
-          distribution: temurin                # │
+          java-version:  ${{ env.JAVA_VERSION }}   # │
+          distribution:  ${{ env.JAVA_DISTRIBUTION }} # │
           cache: maven                          # │
           server-id: nexus                      # │
           server-username: NEXUS_USERNAME       # │
@@ -322,8 +377,11 @@ jobs:
   build-image:
     name: "🐳 Build Docker image"
     runs-on: ubuntu-latest
-    needs: build-artifact       # runs in parallel with push-nexus
+    needs: [ setup, build-artifact ]    # runs in parallel with push-nexus
     continue-on-error: ${{ vars.BUILD_IMAGE_BLOCKING == 'false' }}
+    defaults:
+      run:
+        working-directory: .
     steps:
       - name: 📥 Checkout
         uses: actions/checkout@v4
@@ -331,23 +389,24 @@ jobs:
       - name: 📥 Download JAR
         uses: actions/download-artifact@v4
         with:
-          name: app-jar
-          path: backend/target/
+          name: ${{ needs.setup.outputs.build-ref }}-jar
+          path: ${{ env.WORKING_DIR }}/target/
 
-      - name: 🏷️ Docker metadata (git sha tag)
+      - name: 🏷️ Docker metadata
         id: meta
         uses: docker/metadata-action@v5
         with:
           images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
           tags: |
+            type=raw,value=${{ needs.setup.outputs.build-ref }}
             type=sha,format=long
             type=ref,event=branch
-            type=semver,pattern={{version}},value=${{ needs.build-artifact.outputs.version }}
+            type=semver,pattern={{version}},value=${{ needs.setup.outputs.version }}
 
       - name: 🐳 Build image (no push)
         uses: docker/build-push-action@v5
         with:
-          context: backend      # Dockerfile lives in /backend
+          context: ${{ env.WORKING_DIR }}   # Dockerfile lives in WORKING_DIR
           push: false
           tags: ${{ steps.meta.outputs.tags }}
           outputs: type=docker,dest=/tmp/image.tar
@@ -355,7 +414,7 @@ jobs:
       - name: 📤 Upload image tar
         uses: actions/upload-artifact@v4
         with:
-          name: docker-image
+          name: ${{ needs.setup.outputs.build-ref }}-image
           path: /tmp/image.tar
           retention-days: 1
 
@@ -364,16 +423,16 @@ jobs:
   scan-image:
     name: "🔬 Image security scan"
     runs-on: ubuntu-latest
-    needs: build-image
+    needs: [ setup, build-image ]
     continue-on-error: ${{ vars.SCAN_IMAGE_BLOCKING == 'false' }}
     defaults:
       run:
-        working-directory: .    # Trivy runs outside /backend
+        working-directory: .    # Trivy runs outside WORKING_DIR
     steps:
       - name: 📥 Download image tar
         uses: actions/download-artifact@v4
         with:
-          name: docker-image
+          name: ${{ needs.setup.outputs.build-ref }}-image
           path: /tmp/
 
       - name: 🔬 Scan vulnerabilities
@@ -397,6 +456,7 @@ jobs:
     name: "🚢 Push image to registry"
     runs-on: ubuntu-latest
     needs:
+      - setup
       - scan-image              # ✅ image validated
       - push-nexus              # ✅ artifact in place
     continue-on-error: ${{ vars.PUSH_IMAGE_BLOCKING == 'false' }}
@@ -407,7 +467,7 @@ jobs:
       - name: 📥 Download image tar
         uses: actions/download-artifact@v4
         with:
-          name: docker-image
+          name: ${{ needs.setup.outputs.build-ref }}-image
           path: /tmp/
 
       - name: 🔐 Login to registry
@@ -420,4 +480,4 @@ jobs:
       - name: 🚢 Load and push
         run: |
           docker load -i /tmp/image.tar
-          docker push ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          docker push --all-tags ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
