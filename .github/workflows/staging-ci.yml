@@ -71,7 +71,7 @@ defaults:
 env:
   JAVA_VERSION:      '17'
   JAVA_DISTRIBUTION: temurin
-  WORKING_DIR:       
+  WORKING_DIR:       .
   ARTIFACT_NAME:     my-backend
   NEXUS_URL:         https://nexus.example.com/repository/maven-releases
   REGISTRY:          registry.example.com
