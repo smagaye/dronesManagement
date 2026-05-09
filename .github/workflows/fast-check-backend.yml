@@ -3,15 +3,9 @@ name: 🚀 Fast check Backend
 on:
   push:
     branches-ignore:
-      - main
-      - dev
-
-  pull_request:
-    branches-ignore:
-      - main
-      - dev
-      - 'release/**'
-
+      - 'feature/**'
+      - 'core/**'
+      
 env:
   JAVA_VERSION:      '17'
   JAVA_DISTRIBUTION: temurin
