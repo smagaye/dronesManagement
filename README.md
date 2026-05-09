@@ -23,7 +23,8 @@ Each **Medication** has:
 - code (allowed only upper case letters, underscore and numbers);
 - image (picture of the medication case).
  
-We are going to develop a service via REST API that allows clients to communicate with the drones (i.e. **dispatch controller**).
+We are going to develop a service via REST API that allows clients 
+to communicate with the drones (i.e. **dispatch controller**).
 The specific communicaiton with the drone is outside the scope of this task. 
  
 ### Features
