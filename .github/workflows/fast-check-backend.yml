@@ -1,0 +1,115 @@
+name: 🚀 Fast check Backend
+
+on:
+  push:
+    branches-ignore:
+      - main
+      - dev
+
+  pull_request:
+    branches-ignore:
+      - main
+      - dev
+      - 'release/**'
+
+env:
+  JAVA_VERSION:      '17'
+  JAVA_DISTRIBUTION: temurin
+  WORKING_DIR:       backend
+  ARTIFACT_NAME:     backend
+
+# ─────────────────────────────────────────────
+jobs:
+
+  # ─── 1. SECRET SCAN ───────────────────────
+  scan-secrets:
+    name: "🔑 Secret scan"
+    runs-on: ubuntu-latest
+    continue-on-error: ${{ vars.SCAN_SECRETS_BLOCKING == 'false' }}
+    defaults:
+      run:
+        working-directory: .    # Gitleaks scans the entire repo, not just WORKING_DIR
+    steps:
+      - name: 📥 Checkout (full history)
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📥 Install gitleaks
+        run: |
+          curl -sSfL https://github.com/gitleaks/gitleaks/releases/download/v8.21.2/gitleaks_8.21.2_linux_x64.tar.gz \
+            | tar -xz -C /tmp
+          sudo mv /tmp/gitleaks /usr/local/bin/gitleaks
+
+      - name: 🔍 Detect secrets
+        run: gitleaks detect --source . --verbose
+
+
+  # ─── 2. ARCHITECTURE TESTS ────────────────
+  test-architecture:
+    name: "🏛️ Architecture tests"
+    runs-on: ubuntu-latest
+    needs: [ scan-secrets ]
+    continue-on-error: ${{ vars.TEST_ARCH_BLOCKING == 'false' }}
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: ☕ Setup Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version:  ${{ env.JAVA_VERSION }}
+          distribution:  ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: 📐 Run architecture rules
+        run: |
+          mvn test \
+            -Dtest="**/*ArchTest,**/*ArchitectureTest" \
+            -DfailIfNoTests=false
+
+  # ─── 3. UNIT TESTS ────────────────────────
+  test-unit:
+    name: "🧪 Unit tests"
+    runs-on: ubuntu-latest
+    needs: [ test-architecture ]    # architecture must pass before unit tests
+    continue-on-error: ${{ vars.TEST_UNIT_BLOCKING == 'false' }}
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: ☕ Setup Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version:  ${{ env.JAVA_VERSION }}
+          distribution:  ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: 🧪 Run unit tests
+        run: |
+          mvn test \
+            -Dtest="!**/*ArchTest,!**/*ArchitectureTest,!**/*IT,!**/*IntegrationTest" \
+            -DfailIfNoTests=false
+
+  # ─── 4. INTEGRATION TESTS ─────────────────
+  test-integration:
+    name: "🔗 Integration tests"
+    runs-on: ubuntu-latest
+    needs: [ test-unit ]            # unit tests must pass before integration tests
+    continue-on-error: ${{ vars.TEST_INTEGRATION_BLOCKING == 'false' }}
+    steps:
+      - name: 📥 Checkout
+        uses: actions/checkout@v4
+
+      - name: ☕ Setup Java ${{ env.JAVA_VERSION }}
+        uses: actions/setup-java@v4
+        with:
+          java-version:  ${{ env.JAVA_VERSION }}
+          distribution:  ${{ env.JAVA_DISTRIBUTION }}
+          cache: maven
+
+      - name: 🔗 Run integration tests
+        run: |
+          mvn verify \
+            -Dtest="**/*IT,**/*IntegrationTest" \
+            -DfailIfNoTests=false
